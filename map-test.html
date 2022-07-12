@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.js"></script>
+
+    <style>
+
+      body {
+        overflow: hidden;
+      }
+
+      #map {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+
+  </head>
+  <body>
+    
+    <div id="map"></div>
+    
+  </body>
+
+  <script>
+
+  var map = L.map('map', {
+    drawControl: false,
+  })
+  .setView([41.31, 69.28], 16);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+
+  drawOptions = {
+    position: 'topright',
+    draw: {
+      polygon: {
+          allowIntersection: false, // Restricts shapes to simple polygons
+          drawError: {
+              color: 'blue', // Color the shape will turn when intersects
+              message: '<strong>Oh snap!<strong> you can\'t draw that!', // Message that will show when intersect
+          },
+          shapeOptions: {
+              color: 'red',
+          }
+      },
+      circle: false,
+      circlemarker: false,
+      marker: true,
+      polyline: false,
+      rectangle: false,
+    },
+    // edit: false,
+    edit: {
+      featureGroup: drawnItems,
+      remove: true,
+    }
+  };
+
+  var drawControl = new L.Control.Draw(drawOptions);
+  var editMarker = new L.EditToolbar.Edit(map, {
+      featureGroup: drawnItems,
+      selectedPathOptions: drawControl
+  });
+  editMarker.enable();
+  map.addControl(drawControl);
+
+  </script>
+
+</html>
